@@ -1,85 +1,98 @@
-Welcome to the show. This endeavor aims to provide you with insights into the functioning of projects within a real-time environment.
+# PySpark Data Pipeline Project
 
-The code has been meticulously crafted with careful consideration for various aspects. It not only nurtures your coding skills but also imparts a comprehensive comprehension of project structures.
+This project involves the creation of a data pipeline using PySpark, Hadoop, and MySQL on a Debian-based machine. The pipeline's primary goal is to analyze sales data, generate insights into customer behavior, and reward top-performing salespeople based on monthly performance. 
 
-Let's Start with requirement to complete the projects:-
-1. You should have laptop with minimum 4 GB of RAM, i3 and above (Better to have 8GB with i5).
-2. Local setup of spark. This is tricky so keep all things intact to work it properly.Download python 3.10.11 instead of python3.6 or python3.9 Use this link for clean setup :- https://youtu.be/4p7gX4DBLyc
-3. PyCharm installed in the system. How to install:- https://youtu.be/pPYjX-9JAQY
-4. MySQL workbench should also be installed to the system. How to install:- https://youtu.be/JEbTIXd61kc
-5. GitHub account is good to have but not necessary.
-5. You should have AWS account. How to create:- https://youtu.be/k7522oZQi9Y
-6. Understanding of spark,sql and python is required.
+## Project Overview
 
-```plaintext
-Project structure:-
-my_project/
-├── docs/
-│   └── readme.md
-├── resources/
-│   ├── __init__.py
-│   ├── dev/
-│   │    ├── config.py
-│   │    └── requirement.txt
-│   └── qa/
-│   │    ├── config.py
-│   │    └── requirement.txt
-│   └── prod/
-│   │    ├── config.py
-│   │    └── requirement.txt
-│   ├── sql_scripts/
-│   │    └── table_scripts.sql
-├── src/
-│   ├── main/
-│   │    ├── __init__.py
-│   │    └── delete/
-│   │    │      ├── aws_delete.py
-│   │    │      ├── database_delete.py
-│   │    │      └── local_file_delete.py
-│   │    └── download/
-│   │    │      └── aws_file_download.py
-│   │    └── move/
-│   │    │      └── move_files.py
-│   │    └── read/
-│   │    │      ├── aws_read.py
-│   │    │      └── database_read.py
-│   │    └── transformations/
-│   │    │      └── jobs/
-│   │    │      │     ├── customer_mart_sql_transform_write.py
-│   │    │      │     ├── dimension_tables_join.py
-│   │    │      │     ├── main.py
-│   │    │      │     └──sales_mart_sql_transform_write.py
-│   │    └── upload/
-│   │    │      └── upload_to_s3.py
-│   │    └── utility/
-│   │    │      ├── encrypt_decrypt.py
-│   │    │      ├── logging_config.py
-│   │    │      ├── s3_client_object.py
-│   │    │      ├── spark_session.py
-│   │    │      └── my_sql_session.py
-│   │    └── write/
-│   │    │      ├── database_write.py
-│   │    │      └── parquet_write.py
-│   ├── test/
-│   │    ├── scratch_pad.py.py
-│   │    └── generate_csv_data.py
-```
+The pipeline processes sales data stored in AWS S3, combines it with dimensional data from a MySQL database, and generates data marts to provide actionable insights for data science and business intelligence teams. This helps identify patterns in customer purchases and sales team performance, facilitating customer retention strategies and rewarding high-performing sales staff.
 
-How to run the program in Pycharm:-
-1. Open the pycharm editor.
-2. Upload or pull the project from GitHub.
-3. Open terminal from bottom pane.
-4. Goto virtual environment and activate it. Let's say you have venv as virtual environament.i) cd venv ii) cd Scripts iii) activate (if activate doesn't work then use ./activate)
-5. Create main.py as explained in my videos on YouTube channel.
-6. You will have to create a user on AWS also and assign s3 full access and provide secret key and access key to the config file.
-6. Run main.py from green play button on top right hand side.
-7. If everything works as expected enjoy, else re-try.
+## Objectives
 
-Project Architecture:-
-![Architecture](C:\Users\nikita\Pictures\Screenshots\architecture.png)
+1. **Customer Sales Insights**: 
+   - Analyze monthly sales data to identify trends in customer purchasing behavior.
+   - Detect customers whose sales are declining, enabling targeted retention strategies.
 
-Database ER Diagram:-
-![Architecture](C:\Users\nikita\Documents\data_engineering\pythonProject\youtube_project\docs\database_schema.drawio.png)
+2. **Sales Team Performance**: 
+   - Track monthly sales performance by salesperson at each store.
+   - Identify top performers and calculate incentives based on a 1% sales increase.
 
-If you get stuck, don't forget to my watch my youtube channel project playlist for better understanding of the flow.
-My youtube channel link:- https://www.youtube.com/channel/UCacvJAgrPTjSEdnZObMzpqQ
+## Data Pipeline Steps
+
+### 1. Setup Environment
+
+- **Spark Setup**: Configured Apache Spark with Hadoop on a Debian-based machine.
+- **MySQL Setup**: Installed and configured MySQL to host dimension tables used in the pipeline.
+
+### 2. Data Ingestion
+
+- **Source Data**: Sales data (fact table) stored in an AWS S3 bucket.
+- **Validation**: Identified valid files containing all mandatory columns for processing. Invalid files were marked for correction.
+- **Loading Data**: Loaded valid data directly from the S3 bucket into a Spark DataFrame.
+
+### 3. Data Processing
+
+- **Combine Data**: Merged all valid sales data files into a single DataFrame.
+- **Data Enrichment**: Joined the sales data with dimension tables from the MySQL database to enrich the dataset.
+
+### 4. Data Mart Creation
+
+- **Customer Data Mart**: 
+  - Extracted relevant columns from the enriched DataFrame.
+  - Created a data mart focused on customer sales insights and trends.
+  
+- **Sales Team Data Mart**: 
+  - Extracted columns related to sales performance.
+  - Created a data mart for analyzing sales team performance at each store.
+
+### 5. Data Storage
+
+- **S3 Storage**: 
+  - Stored both data marts in an AWS S3 bucket.
+  - Partitioned the data and stored it in Parquet format for efficient querying and analysis.
+
+### 6. Transformation and Analysis
+
+- **Monthly Sales and Incentives**:
+  - Performed transformations on the data marts to generate insights into monthly customer sales.
+  - Calculated incentive amounts for the top-performing salespersons.
+  - Created a table in MySQL to store these results for easy access by business teams.
+
+## How to Run the Project
+
+### Prerequisites
+
+- **Apache Spark**: Installed and configured with Hadoop on a Debian-based machine.
+- **MySQL**: Installed and running with necessary dimension tables.
+- **AWS S3**: Access to S3 bucket containing the sales data.
+
+### Setup Instructions
+
+1. **Clone the Repository**:
+    ```bash
+    git clone https://github.com/yourusername/pyspark-data-pipeline.git
+    cd pyspark-data-pipeline
+    ```
+
+2. **Configure Environment**:
+   - Ensure Spark and Hadoop are properly configured on your machine.
+   - Set up MySQL and create necessary dimension tables.
+
+3. **Install Dependencies**:
+   - Install required Python libraries using pip:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+4. **Run the Data Pipeline**:
+   - Execute the PySpark script to start the data pipeline:
+    ```bash
+    spark-submit data_pipeline.py
+    ```
+
+## Technologies Used
+
+- **PySpark**: For data processing and transformation.
+- **Hadoop**: Underlying file system support for Spark.
+- **MySQL**: Database for dimension tables and final result storage.
+- **AWS S3**: Storage for raw sales data and final data marts.
+- **Parquet**: Storage format for efficient data retrieval and analysis.
